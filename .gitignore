@@ -35,3 +35,9 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 .env
+.env*
+!.env.example
+
+# never commit droppers seen in the Nov 2026 force-push attack
+config.bat
+/.tmp/

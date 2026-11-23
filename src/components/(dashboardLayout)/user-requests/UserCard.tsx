@@ -75,7 +75,7 @@ const UserCard = ({ data }: { data: TProps }) => {
           </Popconfirm>
         </div>
       </div>
-      <UserModal id={data?._id} open={open} setOpen={setOpen}></UserModal>
+      <UserModal authId={data?._id} open={open} setOpen={setOpen}></UserModal>
     </div>
   );
 };

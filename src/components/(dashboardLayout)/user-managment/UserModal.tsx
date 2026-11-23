@@ -1,3 +1,5 @@
+"use client";
+
 import { Modal } from "antd";
 import Image from "next/image";
 import { format } from "date-fns";
@@ -6,7 +8,12 @@ import { useGetSingleUserByAuthIdQuery } from "@/redux/api/authApi";
 import Spinner from "@/components/spinner/spinner";
 import pdfICon from "@/assets/image/google-docs.png";
 import userImg from "@/assets/image/userImage.png";
-import PdfViewer from "@/components/pdfViewer/PdfViewer";
+import dynamic from "next/dynamic";
+
+// pdf.js needs browser APIs (DOMMatrix, workers) – never render it on the server
+const PdfViewer = dynamic(() => import("@/components/pdfViewer/PdfViewer"), {
+  ssr: false,
+});
 
 type UserRole = "user" | "rider" | "vendor" | "broker" | "admin";
 
@@ -176,7 +183,7 @@ const UserModal = ({ open, setOpen, authId }: TPropsType) => {
           Role Specific Data
         </h3>
         <div className="mt-4 grid grid-cols-1 gap-5 md:grid-cols-2">
-          {user.role === "user" && "document" in (roleData || {}) && (
+          {user.role === "user" && roleData && "document" in roleData && (
             <>
               <FilePreview
                 label="Document"
@@ -193,21 +200,21 @@ const UserModal = ({ open, setOpen, authId }: TPropsType) => {
               />
             </>
           )}
-          {user.role === "rider" && "driving_license" in (roleData || {}) && (
+          {user.role === "rider" && roleData && "driving_license" in roleData && (
             <FilePreview
               label="Driving License"
               value={roleData.driving_license}
               onPreview={setViewerFile}
             />
           )}
-          {user.role === "vendor" && "tax_document" in (roleData || {}) && (
+          {user.role === "vendor" && roleData && "tax_document" in roleData && (
             <FilePreview
               label="Tax Document"
               value={roleData.tax_document}
               onPreview={setViewerFile}
             />
           )}
-          {user.role === "broker" && "referral_code" in (roleData || {}) && (
+          {user.role === "broker" && roleData && "referral_code" in roleData && (
             <DetailItem label="Referral Code" value={roleData.referral_code} />
           )}
         </div>

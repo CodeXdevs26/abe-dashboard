@@ -3,12 +3,12 @@
 import { Button } from "antd";
 import dynamic from "next/dynamic";
 import { useState, useEffect } from "react";
-import "react-quill/dist/quill.snow.css";
+import "react-quill-new/dist/quill.snow.css";
 import { useGetSettingsQuery, useUpdateSettingsMutation } from "@/redux/api/settingsApi";
 import { message } from "antd";
 
 // Dynamically import ReactQuill with SSR disabled
-const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
+const ReactQuill = dynamic(() => import("react-quill-new"), { ssr: false });
 
 const AboutUsEditor = () => {
   const { data: settingsData, isLoading } = useGetSettingsQuery({});

@@ -36,7 +36,14 @@ const LoginForm = () => {
       return toast.warning("Only admin can login to the dashboard!");
     }
     dispatch(setUser({ token: accessToken, user }));
-    router.push(redirectUrl ? redirectUrl : "/dashboard");
+    // Only allow same-origin relative paths to prevent open redirects
+    // (e.g. ?redirect=https://evil.com, //evil.com, /\evil.com, javascript:...)
+    const isSafeRedirect =
+      !!redirectUrl &&
+      redirectUrl.startsWith("/") &&
+      !redirectUrl.startsWith("//") &&
+      !redirectUrl.startsWith("/\\");
+    router.push(isSafeRedirect ? redirectUrl! : "/dashboard");
   };
 
   const onFinish: FormProps<FieldType>["onFinish"] = (values) => {
@@ -55,11 +62,12 @@ const LoginForm = () => {
     >
       <Form
         name="basic"
-        initialValues={{
-          remember: false,
-          email: "admin@gmail.com",
-          password: "admin",
-        }}
+        initialValues={
+          // Never ship default credentials in production bundles
+          process.env.NODE_ENV === "development"
+            ? { remember: false, email: "admin@gmail.com", password: "admin" }
+            : { remember: false }
+        }
         onFinish={onFinish}
         autoComplete="off"
         layout="vertical"

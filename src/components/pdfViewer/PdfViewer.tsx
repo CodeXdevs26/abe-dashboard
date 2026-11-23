@@ -1,9 +1,16 @@
-import React from "react";
-import { Document, Page } from "react-pdf";
-import { pdfjs } from "react-pdf";
+"use client";
 
-// Set workerSrc for react-pdf to avoid warnings
-pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
+import React from "react";
+import { Document, Page, pdfjs } from "react-pdf";
+import "react-pdf/dist/Page/AnnotationLayer.css";
+import "react-pdf/dist/Page/TextLayer.css";
+
+// Serve the PDF.js worker from our own bundle instead of a third-party CDN
+// (keeps the version in sync with pdfjs-dist and avoids loading remote code).
+pdfjs.GlobalWorkerOptions.workerSrc = new URL(
+  "pdfjs-dist/build/pdf.worker.min.mjs",
+  import.meta.url,
+).toString();
 
 const PdfViewer = ({ url }: { url: string }) => {
   const [numPages, setNumPages] = React.useState(1);

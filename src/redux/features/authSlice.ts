@@ -22,7 +22,12 @@ const authSlice = createSlice({
       state.token = token;
 
       // set cookie for middleware access
-      Cookies.set("accessToken", token);
+      Cookies.set("accessToken", token, {
+        sameSite: "strict",
+        secure:
+          typeof window !== "undefined" &&
+          window.location.protocol === "https:",
+      });
     },
     logOut: (state) => {
       state.user = null;
